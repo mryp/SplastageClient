@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="バージョン情報">
+        <PreferenceScreen
+            android:title="version 1.0.0"
+            android:summary="Copyright (C) 2015 PORING SOFT"
+            android:key="version_info" />
+    </PreferenceCategory>
+</PreferenceScreen>
