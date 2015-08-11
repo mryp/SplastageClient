@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * メイン画面
+ */
 public class MainActivity extends ActionBarActivity {
     //定数
     //----------------------------------------------------------
@@ -31,8 +34,6 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment()).commit();
         }
     }
-
-
 
     /**
      * 復旧時

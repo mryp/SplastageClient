@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by mry on 15/08/11.
+ * ステージ情報（サーバーから取得したデータ）
  */
 public class StageInfo {
     private long m_id;

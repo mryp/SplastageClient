@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by mry on 15/08/11.
+ * メイン画面リストアダプタ
  */
 public class MainListAdapter extends BaseAdapter {
 

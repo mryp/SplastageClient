@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by mry on 15/08/11.
+ * 開始日ごとに集計したデータ
  */
 public class StageSchduleInfo {
 
