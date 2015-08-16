@@ -2,6 +2,8 @@ package net.poringsoft.splastageclient;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,8 @@ import java.util.Map;
  * 開始日ごとに集計したデータ
  */
 public class StageSchduleInfo {
-
+    //内部クラス
+    //---------------------------------------------------------
     public static class MatchNameInfo {
         private String m_name;
         private String m_imageUrl;
@@ -29,41 +32,51 @@ public class StageSchduleInfo {
         }
     }
 
+    //定数
+    //---------------------------------------------------------
     public static final String KEY_MATCH_NAWABARI = "レギュラーマッチ";
     public static final String KEY_MATCH_GACHI = "ガチマッチ";
 
+    //フィールド
+    //---------------------------------------------------------
     private String m_timeText;
+    private long m_startTimeTick;
     private Map<String, List<MatchNameInfo>> m_matchList;
 
-    /**
-     * 例：
-     *
-     2015/08/11 11:00 ～ 08/11 15:00
-     【ナワバリバトル】
-     デカライン高架下、ネギトロ炭鉱
 
-     【ガチマッチ：ガチエリア】
-     シオノメ油田、モズク農園
-
-     https://splatoon.nintendo.net/assets/img/svg/stage/@2x/29d337c67ca79145136cf3e3d4ed754c755f097df2375db3c172eb87663a5561-8eb7cc82608b74009d6ffe89006756c7561d59b02a497cf52ee0fa3e42d76829.jpg
-     * @return
-     */
-
+    //プロパティ
+    //---------------------------------------------------------
     public String getTimeText() {
         return m_timeText;
     }
-
+    public long getStartTimeTick() { return m_startTimeTick; }
     public Map<String, List<MatchNameInfo>> getMatchList() {
         return m_matchList;
     }
 
-    public StageSchduleInfo(String timeText, Map<String, List<MatchNameInfo>> matchList) {
+
+    //メソッド
+    //---------------------------------------------------------
+    /**
+     * コンストラクタ
+     * @param timeText 時間表示文字列
+     * @param matchList マッチごとのステージ名リスト
+     */
+    public StageSchduleInfo(long startTimeTick, String timeText, Map<String, List<MatchNameInfo>> matchList) {
+        m_startTimeTick = startTimeTick;
         m_timeText = timeText;
         m_matchList = matchList;
     }
 
+    /**
+     * リスト表示用のスケジュールリストを生成する
+     * @param stageInfoList ステージ情報リスト
+     * @return スケジュールリスト
+     */
     public static List<StageSchduleInfo> CreateList(List<StageInfo> stageInfoList) {
-        List<StageSchduleInfo> resultList = new ArrayList<>();
+        if (stageInfoList == null || stageInfoList.size() == 0) {
+            return new ArrayList<>();
+        }
 
         Map<Long, List<StageInfo>> timeGroupList = new HashMap<>();
         for (StageInfo info : stageInfoList) {
@@ -76,6 +89,7 @@ public class StageSchduleInfo {
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
+        List<StageSchduleInfo> resultList = new ArrayList<>();
         for (Long key : timeGroupList.keySet()) {
             List<StageInfo> itemList = timeGroupList.get(key);
             if (itemList.size() > 0) {
@@ -89,9 +103,25 @@ public class StageSchduleInfo {
                     matchList.get(matchKey).add(new MatchNameInfo(item.getName(), item.getImageUrl()));
                 }
 
-                resultList.add(new StageSchduleInfo(timeText, matchList));
+                PSDebug.d("timeText=" + timeText);
+                resultList.add(new StageSchduleInfo(key, timeText, matchList));
             }
         }
+
+        //時間順になるように並び替える
+        Collections.sort(resultList, new Comparator<StageSchduleInfo>() {
+            @Override
+            public int compare(StageSchduleInfo lhs, StageSchduleInfo rhs) {
+                if (lhs.getStartTimeTick() > rhs.getStartTimeTick()) {
+                    return 1;
+                }
+                else if (lhs.getStartTimeTick() < rhs.getStartTimeTick()) {
+                    return -1;
+                }
+
+                return 0;
+            }
+        });
 
         return resultList;
     }

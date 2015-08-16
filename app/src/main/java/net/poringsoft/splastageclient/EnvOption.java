@@ -98,7 +98,12 @@ public class EnvOption {
 
     //設定値取得メソッド
     //-------------------------------------------
+    /**
+     * ステージ情報を取得するためのJSON APIのURL
+     * @param context コンテキスト
+     * @return URL文字列
+     */
     public static String getUrlStageNowJson(Context context) {
-        return getString(context, KEY_URL_STAGE_NOW_JSON, "http://www.poringsoft.net/splastage/stage/now");
+        return getString(context, KEY_URL_STAGE_NOW_JSON, "http://www.poringsoft.net/splastage/stage/currentlater");
     }
 }

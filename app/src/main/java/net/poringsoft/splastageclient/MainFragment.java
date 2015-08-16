@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by mry on 15/08/10.
+ * メインリスト画面用フラグメント
  */
 public class MainFragment extends ListFragment {
     //フィールド
@@ -118,7 +118,9 @@ public class MainFragment extends ListFragment {
         return false;
     }
 
-
+    /**
+     * 現在のステージ情報を非同期で取得するためのタスククラス
+     */
     public class StageNowAsyncTask extends AsyncTask<String, String, List<StageInfo>> {
         /**
          * 更新前処理
@@ -161,17 +163,24 @@ public class MainFragment extends ListFragment {
         protected void onPostExecute(List<StageInfo> stageInfoList) {
             if (stageInfoList == null)
             {
-                String messageText = "データが取得できませんでした";
+                String messageText = "データの取得に失敗しました";
                 setEmptyText(messageText);
             }
-
-            List<StageSchduleInfo> schduleList = StageSchduleInfo.CreateList(stageInfoList);
-            if (getActivity() != null && getListView() != null) {
-                m_adapter = new MainListAdapter(getActivity(), schduleList);
-                setListAdapter(m_adapter);
+            else
+            {
+                List<StageSchduleInfo> schduleList = StageSchduleInfo.CreateList(stageInfoList);
+                if (getActivity() != null && getListView() != null) {
+                    m_adapter = new MainListAdapter(getActivity(), schduleList);
+                    setListAdapter(m_adapter);
+                }
             }
         }
 
+        /**
+         * HTTPのGET処理で文字列を取得する
+         * @param urlText URL文字列
+         * @return 取得した結果
+         */
         public String getHttpString(String urlText) {
             String result = "";
             HttpURLConnection conn = null;
@@ -201,17 +210,30 @@ public class MainFragment extends ListFragment {
             return result;
         }
 
-        public String streamToString(InputStream stream) throws IOException {
+        /**
+         * ストリームから文字列を生成する（UTF-8専用）
+         * @param stream 入力ストリーム
+         * @return 文字列
+         * @throws IOException 例外
+         */
+        public String streamToString(InputStream stream) {
             StringBuilder sb = new StringBuilder();
             String line = "";
-            BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
-            while((line = br.readLine()) != null){
-                sb.append(line);
-            }
             try {
-                stream.close();
-            } catch(Exception e) {
-                e.printStackTrace();
+                BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+                while((line = br.readLine()) != null){
+                    sb.append(line);
+                }
+                try {
+                    stream.close();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    return "";
+                }
+            }
+            catch (Exception err) {
+                err.printStackTrace();
+                return "";
             }
             return sb.toString();
         }
