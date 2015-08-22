@@ -98,8 +98,8 @@ public class StageInfo {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String startTime = sdf.format(m_startTime);
         String endTime = sdf.format(m_endTime);
-        return String.format("id=%d, match=%s, rule=%s, name=%s, start=%s, end=%s",
-                m_id, m_matchType, m_rule, m_name, startTime, endTime);
+        return String.format("id=%d, match=%s, rule=%s, name=%s, start=%s, end=%s, image=%s",
+                m_id, m_matchType, m_rule, m_name, startTime, endTime, m_imageUrl);
     }
 
     /**

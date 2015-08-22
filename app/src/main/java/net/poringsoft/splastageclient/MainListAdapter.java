@@ -2,11 +2,13 @@ package net.poringsoft.splastageclient;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -84,25 +86,55 @@ public class MainListAdapter extends BaseAdapter {
         TextView text = (TextView)view.findViewById(R.id.timeTextView);
         text.setText(info.getTimeText());
 
+        boolean isRegMatch = false;
+        boolean isGachMatch = false;
+        boolean isFesMatch = false;
         for (String matchKey : info.getMatchList().keySet()) {
             List<StageSchduleInfo.MatchNameInfo> nameList = info.getMatchList().get(matchKey);
             if (matchKey.startsWith(StageSchduleInfo.KEY_MATCH_NAWABARI)) {
+                isRegMatch = true;
                 ((TextView)view.findViewById(R.id.nawabariMatchRuleTextView)).setText(matchKey);
                 setStageName(view, nameList,
                         Arrays.asList(R.id.nawabariNameTextView1, R.id.nawabariNameTextView2),
                         Arrays.asList(R.id.nawabariImageView1, R.id.nawabariImageView2));
             }
             else if (matchKey.startsWith(StageSchduleInfo.KEY_MATCH_GACHI)) {
+                isGachMatch = true;
                 ((TextView)view.findViewById(R.id.gachiMatchRuleTextView)).setText(matchKey);
                 setStageName(view, nameList,
                         Arrays.asList(R.id.gachiNameTextView1, R.id.gachiNameTextView2),
                         Arrays.asList(R.id.gachiImageView1, R.id.gachiImageView2));
             }
+            else if (matchKey.startsWith(StageSchduleInfo.KEY_MATCH_FES)) {
+                isFesMatch = true;
+                ((TextView)view.findViewById(R.id.fesMatchRuleTextView)).setText(matchKey);
+                setStageName(view, nameList,
+                        Arrays.asList(R.id.fesNameTextView1, R.id.fesNameTextView2, R.id.fesNameTextView3),
+                        Arrays.asList(R.id.fesImageView1, R.id.fesImageView2, R.id.fesImageView3));
+            }
+        }
+
+        //開催していないマッチは非表示にする
+        if (!isRegMatch) {
+            ((LinearLayout)view.findViewById(R.id.nawabariMatchLayout)).setVisibility(View.GONE);
+        }
+        if (!isGachMatch) {
+            ((LinearLayout)view.findViewById(R.id.gachiMatchLayout)).setVisibility(View.GONE);
+        }
+        if (!isFesMatch) {
+            ((LinearLayout)view.findViewById(R.id.fesMatchLayout)).setVisibility(View.GONE);
         }
 
         return view;
     }
 
+    /**
+     * ステージ名・画像をオブジェクトにセットする
+     * @param view
+     * @param nameList
+     * @param textResIdList
+     * @param imageResIdList
+     */
     private void setStageName(View view, List<StageSchduleInfo.MatchNameInfo> nameList, List<Integer> textResIdList, List<Integer> imageResIdList) {
         if (nameList.size() > textResIdList.size() || nameList.size() > imageResIdList.size()) {
             return;
@@ -117,8 +149,6 @@ public class MainListAdapter extends BaseAdapter {
                 ImageView imageView = (ImageView)view.findViewById(imageResIdList.get(i));
                 ImageLoader.getInstance().displayImage(imageUrl, imageView);
             }
-
-            //520:292 = 260:146 = 130:73
         }
     }
 }

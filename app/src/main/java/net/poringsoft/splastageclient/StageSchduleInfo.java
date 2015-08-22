@@ -36,6 +36,7 @@ public class StageSchduleInfo {
     //---------------------------------------------------------
     public static final String KEY_MATCH_NAWABARI = "レギュラーマッチ";
     public static final String KEY_MATCH_GACHI = "ガチマッチ";
+    public static final String KEY_MATCH_FES = "フェスマッチ";
 
     //フィールド
     //---------------------------------------------------------

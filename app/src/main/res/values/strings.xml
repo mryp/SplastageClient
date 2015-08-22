@@ -4,4 +4,6 @@
     <string name="url_poringsoft">http://www.poringsoft.net/</string>
     <string name="action_settings">設定</string>
     <string name="action_jump_official">イカリング（公式）</string>
+
+    <string name="main_item_nodata">NO DATA</string>
 </resources>
